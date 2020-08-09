@@ -15,6 +15,6 @@ public class BookService {
     }
 
     public List<Book> fetchAll() {
-        return bookRepository.findAll();
+        return bookRepository.findAllByOrderByPriceDesc();
     }
 }
