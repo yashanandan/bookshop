@@ -1,2 +1,11 @@
-package com.tw.bootcamp.bookshop.user;public interface UserRepository {
+package com.tw.bootcamp.bookshop.user;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends CrudRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 }
