@@ -45,7 +45,7 @@ class BookControllerTest {
         mockMvc.perform(get("/books")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()r").value(0));
+                .andExpect(jsonPath("$.length()").value(0));
         verify(bookService, times(1)).fetchAll();
     }
 }
