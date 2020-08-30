@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserCommand;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,11 +19,10 @@ class UserServiceTest {
 
     @Test
     void shouldCreateUserWithValidInputs() throws InvalidEmailException {
-        String email = "testemail@test.com";
-        CreateUserCommand userCommand = new CreateUserCommand(email, "foobar");
+        CreateUserCommand userCommand = buildCreateUserCommand();
 
         User user = userService.create(userCommand);
-        Optional<User> fetchedUser = userRepository.findByEmail(email);
+        Optional<User> fetchedUser = userRepository.findByEmail(userCommand.getEmail());
 
         assertTrue(fetchedUser.isPresent());
         assertEquals(user.getId(), fetchedUser.get().getId());
@@ -30,8 +30,7 @@ class UserServiceTest {
 
     @Test
     void shouldNotCreateUserWhenUserWithSameEmailAlreadyExists() {
-        String email = "testemail@test.com";
-        CreateUserCommand userCommand = new CreateUserCommand(email, "foobar");
+        CreateUserCommand userCommand = buildCreateUserCommand();
         userRepository.save(new User(userCommand));
 
         InvalidEmailException createUserException = assertThrows(InvalidEmailException.class,

@@ -11,6 +11,10 @@ public class UserTestBuilder {
                 .email("testemail@test.com");
     }
 
+    public static CreateUserCommand buildCreateUserCommand() {
+        return new CreateUserCommand("testemail@test.com", "foobar");
+    }
+
     public User build() {
         return userBuilder.build();
     }

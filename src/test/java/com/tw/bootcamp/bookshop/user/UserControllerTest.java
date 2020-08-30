@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserCommand;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,7 +28,7 @@ class UserControllerTest {
     @Test
     void shouldCreateUserWhenCredentialsAreValid() throws Exception {
         String email = "testemail@test.com";
-        CreateUserCommand userCredentials = new CreateUserCommand(email, "foobar");
+        CreateUserCommand userCredentials = buildCreateUserCommand();
         User user = new UserTestBuilder().withEmail(email).build();
         when(userService.create(userCredentials)).thenReturn(user);
         UserView userView = UserView.builder().id(user.getId().toString()).email(email).build();
@@ -43,7 +44,7 @@ class UserControllerTest {
 
     @Test
     void shouldRespondWithErrorMessageWhenCreateUserFails() throws Exception {
-        CreateUserCommand userCredentials = new CreateUserCommand("testemail@test.com", "foobar");
+        CreateUserCommand userCredentials = buildCreateUserCommand();
         when(userService.create(userCredentials)).thenThrow(new InvalidEmailException());
 
         mockMvc.perform(post("/users")
