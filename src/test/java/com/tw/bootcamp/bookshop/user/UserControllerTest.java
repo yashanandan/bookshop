@@ -8,6 +8,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+
+import java.util.Set;
+
 import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserCommand;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +30,9 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private Validator validator;
 
     @Test
     void shouldCreateUserWhenCredentialsAreValid() throws Exception {
@@ -52,5 +61,19 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("User with same email already created"));
+    }
+
+    @Test
+    void shouldRespondWithErrorMessageWhenCreateUserValidationFails() throws Exception {
+        CreateUserCommand userCredentials = new CreateUserCommand("", "foobar");
+        Set<ConstraintViolation<User>> violations = validator.validate(new User(userCredentials));
+        when(userService.create(userCredentials)).thenThrow(new ConstraintViolationException(violations));
+
+        mockMvc.perform(post("/users")
+                .content(objectMapper.writeValueAsString(userCredentials))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.errors.email").value("Email is mandatory"));
     }
 }

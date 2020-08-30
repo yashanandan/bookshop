@@ -3,12 +3,16 @@ package com.tw.bootcamp.bookshop.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Validator;
 import java.util.Optional;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private Validator validator;
 
     public UserService() {
     }
@@ -19,6 +23,7 @@ public class UserService {
             throw new InvalidEmailException();
         }
         User newUser = new User(userCommand);
+        validator.validate(newUser);
         return userRepository.save(newUser);
     }
 }

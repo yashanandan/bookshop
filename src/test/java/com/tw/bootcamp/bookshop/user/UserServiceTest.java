@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
 import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserCommand;
@@ -36,5 +37,12 @@ class UserServiceTest {
         InvalidEmailException createUserException = assertThrows(InvalidEmailException.class,
                 () -> userService.create(userCommand));
         assertEquals("User with same email already created", createUserException.getMessage());
+    }
+
+    @Test
+    void shouldNotCreateUserWhenInputIsInvalid() {
+        CreateUserCommand invalidCommand = new CreateUserCommand("", "");
+
+        assertThrows(ConstraintViolationException.class, () -> userService.create(invalidCommand));
     }
 }
