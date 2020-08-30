@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,4 +41,15 @@ class UserControllerTest {
         verify(userService, times(1)).create(userCredentials);
     }
 
+    @Test
+    void shouldRespondWithErrorMessageWhenCreateUserFails() throws Exception {
+        CreateUserCommand userCredentials = new CreateUserCommand("testemail@test.com", "foobar");
+        when(userService.create(userCredentials)).thenThrow(new InvalidEmailException());
+
+        mockMvc.perform(post("/users")
+                .content(objectMapper.writeValueAsString(userCredentials))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("User with same email already created"));
+    }
 }

@@ -12,7 +12,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    ResponseEntity<UserView> create(@RequestBody CreateUserCommand userCommand) {
+    ResponseEntity<UserView> create(@RequestBody CreateUserCommand userCommand) throws InvalidEmailException {
         User user = userService.create(userCommand);
         return new ResponseEntity<>(user.toView(), HttpStatus.CREATED);
     }

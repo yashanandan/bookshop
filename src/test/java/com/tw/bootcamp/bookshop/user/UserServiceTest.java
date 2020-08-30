@@ -6,8 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -18,7 +17,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    void shouldCreateUserWithValidInputs() {
+    void shouldCreateUserWithValidInputs() throws InvalidEmailException {
         String email = "testemail@test.com";
         CreateUserCommand userCommand = new CreateUserCommand(email, "foobar");
 
@@ -27,5 +26,16 @@ class UserServiceTest {
 
         assertTrue(fetchedUser.isPresent());
         assertEquals(user.getId(), fetchedUser.get().getId());
+    }
+
+    @Test
+    void shouldNotCreateUserWhenUserWithSameEmailAlreadyExists() {
+        String email = "testemail@test.com";
+        CreateUserCommand userCommand = new CreateUserCommand(email, "foobar");
+        userRepository.save(new User(userCommand));
+
+        InvalidEmailException createUserException = assertThrows(InvalidEmailException.class,
+                () -> userService.create(userCommand));
+        assertEquals("User with same email already created", createUserException.getMessage());
     }
 }
