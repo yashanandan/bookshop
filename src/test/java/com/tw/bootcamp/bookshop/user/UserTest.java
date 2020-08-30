@@ -8,8 +8,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static com.tw.bootcamp.bookshop.user.User.PASSWORD_ENCODER;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     @Test
@@ -31,6 +31,13 @@ class UserTest {
 
         assertFalse(constraintViolations.isEmpty());
         assertEquals("Password is mandatory", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void shouldEncryptPassword() {
+        User user = new User(new CreateUserCommand("testemail@test.com", "foobar"));
+
+        assertTrue(PASSWORD_ENCODER.matches("foobar", user.getPassword()));
     }
 
     private Validator constraintsValidator() {
