@@ -25,11 +25,17 @@ public class User {
     @NotBlank(message = "Password is mandatory")
     private String password;
 
-    public User(CreateUserCommand userCommand) {
-        email = userCommand.getEmail();
+    private User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public static User create(CreateUserCommand userCommand) {
+        String password = "";
         if (!userCommand.getPassword().isEmpty()) {
             password = PASSWORD_ENCODER.encode(userCommand.getPassword());
         }
+        return new User(userCommand.getEmail(), password);
     }
 
     public Long getId() {
