@@ -32,13 +32,6 @@ public class User {
         }
     }
 
-    public UserView toView() {
-        return UserView.builder()
-                .id(id.toString())
-                .email(email)
-                .build();
-    }
-
     public Long getId() {
         return id;
     }
