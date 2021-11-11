@@ -1,22 +1,12 @@
 package com.tw.bootcamp.bookshop.user;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.validation.ConstraintViolationException;
-import java.util.Optional;
-
-import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserCommand;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -51,6 +41,7 @@ class UserServiceTest {
         assertEquals(userCredentials.getEmail(), argCaptor.getValue().getEmail());
         assertEquals(user.getId(), createdUser.getId());
         assertEquals(user.getEmail(), createdUser.getEmail());
+        assertEquals(Role.USER, createdUser.getRole());
     }
 
     @Test
@@ -70,5 +61,20 @@ class UserServiceTest {
         when(validator.validate(any(User.class))).thenThrow(ConstraintViolationException.class);
 
         assertThrows(ConstraintViolationException.class, () -> userService.create(invalidCommand));
+    }
+
+    @Test
+    void shouldReturnUserForGivenValidEmail() {
+        String validEmailId = "testemail@test.com";
+        User user = new UserTestBuilder().build();
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        assertEquals(user.getEmail(), userService.loadUserByUsername(validEmailId).getUsername());
+    }
+
+    @Test
+    void shouldReturnUserNotFoundExceptionForGivenInValidEmail() {
+        String invalidEmailId = "testemail@test";
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(invalidEmailId));
     }
 }
