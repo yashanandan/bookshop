@@ -24,4 +24,9 @@ public class UserTestBuilder {
         userBuilder.email(email);
         return this;
     }
+
+    public UserTestBuilder withId(long id) {
+        userBuilder.id(id);
+        return this;
+    }
 }

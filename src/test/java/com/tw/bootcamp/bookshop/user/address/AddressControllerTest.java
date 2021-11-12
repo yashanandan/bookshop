@@ -1,7 +1,9 @@
 package com.tw.bootcamp.bookshop.user.address;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tw.bootcamp.bookshop.user.User;
 import com.tw.bootcamp.bookshop.user.UserService;
+import com.tw.bootcamp.bookshop.user.UserTestBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.validation.ConstraintViolationException;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,9 +38,10 @@ class AddressControllerTest {
 
     @Test
     void shouldCreateAddressWhenValid() throws Exception {
-        CreateAddressRequest createRequest = CreateAddressRequest.builder().build();
+        CreateAddressRequest createRequest = createAddress();
         Address address = new AddressTestBuilder().build();
-        when(addressService.create(createRequest, any())).thenReturn(address);
+        when(addressService.create(eq(createRequest), any(User.class))).thenReturn(address);
+        when(userService.findByEmail(anyString())).thenReturn(Optional.of(new UserTestBuilder().build()));
 
         mockMvc.perform(post("/addresses")
                 .content(objectMapper.writeValueAsString(createRequest))
@@ -45,13 +49,14 @@ class AddressControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(address)));
 
-        verify(addressService, times(1)).create(createRequest, any());
+        verify(addressService, times(1)).create(eq(createRequest), any(User.class));
     }
 
     @Test
     void shouldNotCreateAddressWhenInValid() throws Exception {
         CreateAddressRequest createRequest = CreateAddressRequest.builder().city(null).build();
         when(addressService.create(any(), any())).thenThrow(new ConstraintViolationException(new HashSet<>()));
+        when(userService.findByEmail(anyString())).thenReturn(Optional.of(new UserTestBuilder().build()));
 
         mockMvc.perform(post("/addresses")
                 .content(objectMapper.writeValueAsString(createRequest))
@@ -62,5 +67,13 @@ class AddressControllerTest {
         verify(addressService, times(1)).create(any(), any());
     }
 
-
+    private CreateAddressRequest createAddress() {
+        return CreateAddressRequest.builder()
+                .lineNoOne("4 Privet Drive")
+                .lineNoTwo("Little Whinging")
+                .city("Godstone")
+                .pinCode("A22 001")
+                .country("Surrey")
+                .build();
+    }
 }

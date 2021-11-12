@@ -38,7 +38,7 @@ class UserControllerTest {
     void shouldCreateUserWhenCredentialsAreValid() throws Exception {
         String email = "testemail@test.com";
         CreateUserRequest userCredentials = buildCreateUserRequest();
-        User user = new UserTestBuilder().withEmail(email).build();
+        User user = new UserTestBuilder().withId(1L).withEmail(email).build();
         when(userService.create(userCredentials)).thenReturn(user);
         UserView userView = UserView.builder().id(user.getId().toString()).email(email).build();
 
