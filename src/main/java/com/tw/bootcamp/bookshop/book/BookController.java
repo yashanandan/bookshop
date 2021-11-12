@@ -17,6 +17,7 @@ public class BookController {
 
     @GetMapping("/books")
     List<Book> list() {
-        return bookService.fetchAll();
+        List<Book> books = bookService.fetchAll();
+        return books;
     }
 }
