@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
     @Test
     void shouldBeEmailMandatory() {
-        CreateUserCommand userCommand = new CreateUserCommandTestBuilder().withEmptyEmail().build();
-        User user = User.create(userCommand);
+        CreateUserRequest userRequest = new CreateUserRequestTestBuilder().withEmptyEmail().build();
+        User user = User.create(userRequest);
 
         Set<ConstraintViolation<User>> constraintViolations = constraintsValidator().validate(user);
 
@@ -26,8 +26,8 @@ class UserTest {
 
     @Test
     void shouldBePasswordMandatory() {
-        CreateUserCommand userCommand = new CreateUserCommandTestBuilder().withEmptyPassword().build();
-        User user = User.create(userCommand);
+        CreateUserRequest userRequest = new CreateUserRequestTestBuilder().withEmptyPassword().build();
+        User user = User.create(userRequest);
 
         Set<ConstraintViolation<User>> constraintViolations = constraintsValidator().validate(user);
 
@@ -37,8 +37,8 @@ class UserTest {
 
     @Test
     void shouldCreateUserEncryptPassword() {
-        CreateUserCommand userCommand = new CreateUserCommandTestBuilder().build();
-        User user = User.create(userCommand);
+        CreateUserRequest userRequest = new CreateUserRequestTestBuilder().build();
+        User user = User.create(userRequest);
 
         assertTrue(PASSWORD_ENCODER.matches("foobar", user.getPassword()));
     }

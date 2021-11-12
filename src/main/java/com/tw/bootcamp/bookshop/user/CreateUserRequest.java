@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @Getter
 @EqualsAndHashCode
-public class CreateUserCommand {
+public class CreateUserRequest {
     private final String email;
     private final String password;
 }

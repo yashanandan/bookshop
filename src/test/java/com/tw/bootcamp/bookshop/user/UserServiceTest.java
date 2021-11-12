@@ -30,7 +30,7 @@ class UserServiceTest {
 
     @Test
     void shouldCreateUserWithValidInputs() throws InvalidEmailException {
-        CreateUserCommand userCredentials = new CreateUserCommandTestBuilder().build();
+        CreateUserRequest userCredentials = new CreateUserRequestTestBuilder().build();
         User user = new UserTestBuilder().withEmail(userCredentials.getEmail()).build();
         when(userRepository.save(any(User.class))).thenReturn(user);
 
@@ -46,21 +46,21 @@ class UserServiceTest {
 
     @Test
     void shouldNotCreateUserWhenUserWithSameEmailAlreadyExists() {
-        CreateUserCommand userCommand = new CreateUserCommandTestBuilder().build();
-        when(userRepository.findByEmail(userCommand.getEmail())).thenReturn(Optional.of(new User()));
-        userRepository.save(User.create(userCommand));
+        CreateUserRequest userRequest = new CreateUserRequestTestBuilder().build();
+        when(userRepository.findByEmail(userRequest.getEmail())).thenReturn(Optional.of(new User()));
+        userRepository.save(User.create(userRequest));
 
         InvalidEmailException createUserException = assertThrows(InvalidEmailException.class,
-                () -> userService.create(userCommand));
+                () -> userService.create(userRequest));
         assertEquals("User with same email already created", createUserException.getMessage());
     }
 
     @Test
     void shouldNotCreateUserWhenInputIsInvalid() {
-        CreateUserCommand invalidCommand = new CreateUserCommandTestBuilder().withEmptyEmail().build();
+        CreateUserRequest invalidRequest = new CreateUserRequestTestBuilder().withEmptyEmail().build();
         when(validator.validate(any(User.class))).thenThrow(ConstraintViolationException.class);
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(invalidCommand));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(invalidRequest));
     }
 
     @Test

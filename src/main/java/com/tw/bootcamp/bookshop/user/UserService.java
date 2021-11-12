@@ -21,12 +21,12 @@ public class UserService implements UserDetailsService {
     public UserService() {
     }
 
-    public User create(CreateUserCommand userCommand) throws InvalidEmailException {
-        Optional<User> user = userRepository.findByEmail(userCommand.getEmail());
+    public User create(CreateUserRequest userRequest) throws InvalidEmailException {
+        Optional<User> user = userRepository.findByEmail(userRequest.getEmail());
         if (user.isPresent()) {
             throw new InvalidEmailException();
         }
-        User newUser = User.create(userCommand);
+        User newUser = User.create(userRequest);
         validator.validate(newUser);
         return userRepository.save(newUser);
     }

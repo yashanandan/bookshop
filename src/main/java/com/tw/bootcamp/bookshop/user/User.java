@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.user;
 
+import com.tw.bootcamp.bookshop.user.address.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Builder
 @Getter
@@ -28,6 +30,8 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses;
 
     private User(String email, String password, Role role) {
         this.email = email;
@@ -35,11 +39,11 @@ public class User {
         this.role = role;
     }
 
-    public static User create(CreateUserCommand userCommand) {
+    public static User create(CreateUserRequest userRequest) {
         String password = "";
-        if (!userCommand.getPassword().isEmpty()) {
-            password = PASSWORD_ENCODER.encode(userCommand.getPassword());
+        if (!userRequest.getPassword().isEmpty()) {
+            password = PASSWORD_ENCODER.encode(userRequest.getPassword());
         }
-        return new User(userCommand.getEmail(), password, Role.USER);
+        return new User(userRequest.getEmail(), password, Role.USER);
     }
 }

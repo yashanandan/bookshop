@@ -13,8 +13,8 @@ public class UserTestBuilder {
                 .password(User.PASSWORD_ENCODER.encode("foobar"));
     }
 
-    public static CreateUserCommand buildCreateUserCommand() {
-        return new CreateUserCommand("testemail@test.com", "foobar");
+    public static CreateUserRequest buildCreateUserRequest() {
+        return new CreateUserRequest("testemail@test.com", "foobar");
     }
 
     public User build() {

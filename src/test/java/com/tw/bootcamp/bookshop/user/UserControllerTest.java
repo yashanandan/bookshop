@@ -14,7 +14,7 @@ import javax.validation.Validator;
 
 import java.util.Set;
 
-import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserCommand;
+import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserRequest;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -37,7 +37,7 @@ class UserControllerTest {
     @Test
     void shouldCreateUserWhenCredentialsAreValid() throws Exception {
         String email = "testemail@test.com";
-        CreateUserCommand userCredentials = buildCreateUserCommand();
+        CreateUserRequest userCredentials = buildCreateUserRequest();
         User user = new UserTestBuilder().withEmail(email).build();
         when(userService.create(userCredentials)).thenReturn(user);
         UserView userView = UserView.builder().id(user.getId().toString()).email(email).build();
@@ -53,7 +53,7 @@ class UserControllerTest {
 
     @Test
     void shouldRespondWithErrorMessageWhenCreateUserFails() throws Exception {
-        CreateUserCommand userCredentials = buildCreateUserCommand();
+        CreateUserRequest userCredentials = buildCreateUserRequest();
         when(userService.create(userCredentials)).thenThrow(new InvalidEmailException());
 
         mockMvc.perform(post("/users")
@@ -65,7 +65,7 @@ class UserControllerTest {
 
     @Test
     void shouldRespondWithErrorMessageWhenCreateUserValidationFails() throws Exception {
-        CreateUserCommand userCredentials = new CreateUserCommand("", "foobar");
+        CreateUserRequest userCredentials = new CreateUserRequest("", "foobar");
         Set<ConstraintViolation<User>> violations = validator.validate(User.create(userCredentials));
         when(userService.create(userCredentials)).thenThrow(new ConstraintViolationException(violations));
 
