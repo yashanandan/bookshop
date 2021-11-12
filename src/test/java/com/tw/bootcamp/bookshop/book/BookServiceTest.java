@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class BookServiceTest {
@@ -24,7 +24,7 @@ class BookServiceTest {
 
     @Test
     void shouldFetchAllBooks() {
-        Book book = new Book("title", "author name", 300);
+        Book book = new BookTestBuilder().withName("title").build();
         bookRepository.save(book);
 
         List<Book> books = bookService.fetchAll();
@@ -34,15 +34,15 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldFetchAllBooksBeSortedByPrice() {
-        Book lowPrice = new Book("title", "author name", 300);
-        Book highPrice = new Book("costlier", "author name", 400);
-        bookRepository.save(lowPrice);
-        bookRepository.save(highPrice);
+    void shouldFetchAllBooksBeSortedByNameAscending() {
+        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").build();
+        Book animalFarm = new BookTestBuilder().withName("Animal Farm").build();
+        bookRepository.save(wingsOfFire);
+        bookRepository.save(animalFarm);
 
         List<Book> books = bookService.fetchAll();
 
         assertEquals(2, books.size());
-        assertEquals("costlier", books.get(0).getName());
+        assertEquals("Animal Farm", books.get(0).getName());
     }
 }

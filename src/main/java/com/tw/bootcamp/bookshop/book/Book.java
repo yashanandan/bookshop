@@ -1,7 +1,17 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.tw.bootcamp.bookshop.money.Money;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 @Entity
 @Table(name = "books")
 public class Book {
@@ -10,30 +20,6 @@ public class Book {
     private Long id;
     private String name;
     private String authorName;
-    private Integer price;
-
-    public Book() {
-    }
-
-    public Book(String name, String authorName, Integer price) {
-        this.name = name;
-        this.authorName = authorName;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public Long getId() {
-        return id;
-    }
+    @Embedded
+    private Money price;
 }

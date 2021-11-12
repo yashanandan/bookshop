@@ -32,7 +32,7 @@ class BookControllerTest {
     @Test
     void shouldListAllBooksWhenPresent() throws Exception {
         List<Book> books = new ArrayList<>();
-        Book book = new Book("title", "author name", 300);
+        Book book = new BookTestBuilder().build();
         books.add(book);
         when(bookService.fetchAll()).thenReturn(books);
 
