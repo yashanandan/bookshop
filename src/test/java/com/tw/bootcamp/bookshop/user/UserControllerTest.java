@@ -40,13 +40,13 @@ class UserControllerTest {
         CreateUserRequest userCredentials = buildCreateUserRequest();
         User user = new UserTestBuilder().withId(1L).withEmail(email).build();
         when(userService.create(userCredentials)).thenReturn(user);
-        UserView userView = UserView.builder().id(user.getId().toString()).email(email).build();
+        UserResponse userResponse = UserResponse.builder().id(user.getId().toString()).email(email).build();
 
         mockMvc.perform(post("/users")
                 .content(objectMapper.writeValueAsString(userCredentials))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(objectMapper.writeValueAsString(userView)));
+                .andExpect(content().string(objectMapper.writeValueAsString(userResponse)));
 
         verify(userService, times(1)).create(userCredentials);
     }

@@ -12,8 +12,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    ResponseEntity<UserView> create(@RequestBody CreateUserRequest userRequest) throws InvalidEmailException {
+    ResponseEntity<UserResponse> create(@RequestBody CreateUserRequest userRequest) throws InvalidEmailException {
         User user = userService.create(userRequest);
-        return new ResponseEntity<>(new UserView(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(new UserResponse(user), HttpStatus.CREATED);
     }
 }
