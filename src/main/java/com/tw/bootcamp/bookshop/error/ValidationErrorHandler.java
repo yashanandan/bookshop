@@ -21,7 +21,7 @@ public class ValidationErrorHandler {
         }
 
         ErrorResponse apiError =
-                new ErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", errors);
+                new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed", errors);
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 

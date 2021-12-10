@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class UserErrorHandler {
     @ExceptionHandler({ InvalidEmailException.class })
     public ResponseEntity<ErrorResponse> handleCreateUserError(Exception ex) {
-        ErrorResponse apiError = new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ErrorResponse apiError = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }
