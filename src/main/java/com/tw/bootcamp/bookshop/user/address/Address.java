@@ -55,4 +55,16 @@ public class Address {
                 createRequest.getCountry(),
                 user);
     }
+
+    public AddressResponse toResponse() {
+        return AddressResponse.builder()
+                .id(id)
+                .lineNoOne(lineNoOne)
+                .lineNoTwo(lineNoTwo)
+                .city(city)
+                .state(state)
+                .country(country)
+                .pinCode(pinCode)
+                .build();
+    }
 }

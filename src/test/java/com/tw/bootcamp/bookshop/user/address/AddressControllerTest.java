@@ -47,7 +47,11 @@ class AddressControllerTest {
                 .content(objectMapper.writeValueAsString(createRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(objectMapper.writeValueAsString(address)));
+                .andExpect(jsonPath("$.lineNoOne").value("4 Privet Drive"))
+                .andExpect(jsonPath("$.lineNoTwo").value("Little Whinging"))
+                .andExpect(jsonPath("$.city").value("Godstone"))
+                .andExpect(jsonPath("$.pinCode").value("A22 001"))
+                .andExpect(jsonPath("$.country").value("Surrey"));
 
         verify(addressService, times(1)).create(eq(createRequest), any(User.class));
     }
