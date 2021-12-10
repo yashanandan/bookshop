@@ -22,4 +22,13 @@ public class Book {
     private String authorName;
     @Embedded
     private Money price;
+
+    public BookResponse toResponse() {
+        return BookResponse.builder()
+                .id(id)
+                .name(name)
+                .authorName(authorName)
+                .price(price)
+                .build();
+    }
 }
