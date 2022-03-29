@@ -1,11 +1,13 @@
 package com.tw.bootcamp.bookshop.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tw.bootcamp.bookshop.user.address.CreateAddressRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.validation.ConstraintViolation;
@@ -16,6 +18,7 @@ import java.util.Set;
 
 import static com.tw.bootcamp.bookshop.user.UserTestBuilder.buildCreateUserRequest;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -75,5 +78,23 @@ class UserControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("Validation failed"))
                 .andExpect(jsonPath("$.errors.email").value("Email is mandatory"));
+    }
+
+    @Test
+    @WithMockUser
+    void shouldUpdateWhenValid() throws Exception {
+        UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
+                .firstName("John")
+                .lastName("Wick")
+                .mobileNumber("1122334455")
+                .address(CreateAddressRequest.builder().lineNoOne("line one").city("abc").build())
+                .build();
+
+        mockMvc.perform(patch("/users/1")
+                .content(objectMapper.writeValueAsString(updateUserRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+
+        verify(userService).update(1L, updateUserRequest);
     }
 }

@@ -31,4 +31,10 @@ public class UserController {
         User user = userService.create(userRequest);
         return new ResponseEntity<>(new UserResponse(user), HttpStatus.CREATED);
     }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<Object> update(@PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest) throws UserNotFoundException {
+        userService.update(id, updateUserRequest);
+        return ResponseEntity.accepted().build();
+    }
 }

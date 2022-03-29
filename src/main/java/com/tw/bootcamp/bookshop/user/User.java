@@ -4,18 +4,17 @@ import com.tw.bootcamp.bookshop.user.address.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -30,8 +29,14 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "user")
-    private List<Address> addresses;
+    private String firstName;
+    private String lastName;
+    private String mobileNumber;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Address> addresses = new ArrayList<>();
+
+    public User() {
+    }
 
     private User(String email, String password, Role role) {
         this.email = email;
@@ -45,5 +50,15 @@ public class User {
             password = PASSWORD_ENCODER.encode(userRequest.getPassword());
         }
         return new User(userRequest.getEmail(), password, Role.USER);
+    }
+
+    public void update(UpdateUserRequest updateUserRequest) {
+        firstName = updateUserRequest.getFirstName();
+        lastName = updateUserRequest.getLastName();
+        mobileNumber = updateUserRequest.getMobileNumber();
+        if(updateUserRequest.getAddress() != null) {
+            Address address = Address.create(updateUserRequest.getAddress(), this);
+            addresses.add(address);
+        }
     }
 }

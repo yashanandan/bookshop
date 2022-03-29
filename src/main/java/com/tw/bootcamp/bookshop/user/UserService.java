@@ -45,4 +45,14 @@ public class UserService implements UserDetailsService {
                 AuthorityUtils.createAuthorityList(user.getRole().authority())
         );
     }
+
+    public void update(Long id, UpdateUserRequest updateUserRequest) throws UserNotFoundException {
+        User user = findById(id);
+        user.update(updateUserRequest);
+        userRepository.save(user);
+    }
+
+    private User findById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
 }

@@ -2,6 +2,8 @@ package com.tw.bootcamp.bookshop.user;
 
 import com.tw.bootcamp.bookshop.user.User.UserBuilder;
 
+import java.util.ArrayList;
+
 public class UserTestBuilder {
     private final UserBuilder userBuilder;
 
@@ -9,6 +11,7 @@ public class UserTestBuilder {
         userBuilder = User.builder()
                 .email("testemail@test.com")
                 .role(Role.USER)
+                .addresses(new ArrayList<>())
                 .password(User.PASSWORD_ENCODER.encode("foobar"));
     }
 
