@@ -37,6 +37,9 @@ jobs:
       - store_artifacts:
           path: build/test-results
       - run: apk add --no-cache curl
+#      The following is a hook to notify a channel when the build has passed or failed.
+#      To make it work you need to set the CHAT_WEBHOOK_URL environement variable in CIRCLE CI.
+#      The value of this variable is the webhook URL of your team's google space. (https://developers.google.com/chat/how-tos/webhooks)
       - run:
           when: on_success
           command: |
