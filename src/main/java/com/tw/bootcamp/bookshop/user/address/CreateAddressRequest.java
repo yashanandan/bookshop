@@ -12,9 +12,11 @@ import javax.validation.constraints.NotBlank;
 public class CreateAddressRequest {
     @NotBlank
     private String lineNoOne;
+    @NotBlank
     private String lineNoTwo;
     @NotBlank
     private String city;
+    @NotBlank
     private String state;
     @NotBlank
     private String pinCode;
