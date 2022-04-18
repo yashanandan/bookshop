@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,10 +30,11 @@ public class BookController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = BookResponse.class))})
     })
-    List<BookResponse> list() {
-        List<Book> books = bookService.fetchAll();
+    List<BookResponse> list(@RequestParam String bookOrAuthorName) {
+        List<Book> books = bookService.fetchAll(bookOrAuthorName);
         return books.stream()
                 .map(book -> book.toResponse())
                 .collect(Collectors.toList());
     }
+
 }

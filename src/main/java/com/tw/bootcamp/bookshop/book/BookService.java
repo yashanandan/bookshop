@@ -14,7 +14,10 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> fetchAll() {
-        return bookRepository.findAllByOrderByNameAsc();
+    public List<Book> fetchAll(String bookOrAuthorName) {
+        if(bookOrAuthorName.isEmpty()){
+           return bookRepository.findAllByOrderByNameAsc();
+        }
+        return bookRepository.findAllByNameContainsIgnoreCaseOrAuthorNameContainsIgnoreCaseOrderByNameAsc( bookOrAuthorName, bookOrAuthorName);
     }
 }

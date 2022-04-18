@@ -34,23 +34,40 @@ class BookControllerTest {
         List<Book> books = new ArrayList<>();
         Book book = new BookTestBuilder().build();
         books.add(book);
-        when(bookService.fetchAll()).thenReturn(books);
+        when(bookService.fetchAll("")).thenReturn(books);
 
-        mockMvc.perform(get("/books")
+        mockMvc.perform(get("/books").param("bookOrAuthorName","")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
-        verify(bookService, times(1)).fetchAll();
+        verify(bookService, times(1)).fetchAll("");
     }
 
     @Test
     void shouldBeEmptyListWhenNoBooksPresent() throws Exception {
-        when(bookService.fetchAll()).thenReturn(new ArrayList<>());
+        when(bookService.fetchAll("")).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(get("/books")
+        mockMvc.perform(get("/books").param("bookOrAuthorName","")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
-        verify(bookService, times(1)).fetchAll();
+        verify(bookService, times(1)).fetchAll("");
     }
+
+    @Test
+    void shouldListTheBooksWithMatchingSearchCriteria() throws Exception {
+        List<Book> books = new ArrayList<>();
+        Book book = new BookTestBuilder().build();
+        books.add(book);
+        String bookOrAuthorName = "Harry";
+        when(bookService.fetchAll(any(String.class))).thenReturn(books);
+
+        mockMvc.perform(get("/books").param("bookOrAuthorName",bookOrAuthorName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+        verify(bookService, times(1)).fetchAll(bookOrAuthorName);
+
+    }
+
 }

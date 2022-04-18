@@ -27,7 +27,7 @@ class BookServiceTest {
         Book book = new BookTestBuilder().withName("title").build();
         bookRepository.save(book);
 
-        List<Book> books = bookService.fetchAll();
+        List<Book> books = bookService.fetchAll("");
 
         assertEquals(1, books.size());
         assertEquals("title", books.get(0).getName());
@@ -40,7 +40,7 @@ class BookServiceTest {
         bookRepository.save(wingsOfFire);
         bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.fetchAll();
+        List<Book> books = bookService.fetchAll("");
 
         assertEquals(2, books.size());
         assertEquals("Animal Farm", books.get(0).getName());
@@ -48,7 +48,20 @@ class BookServiceTest {
 
     @Test
     void shouldBeEmptyIfThereAreNoBooks() {
-        List<Book> books = bookService.fetchAll();
+        List<Book> books = bookService.fetchAll("");
         assertEquals(0, books.size());
+    }
+
+    @Test
+    void shouldFetchAllBooksWithMatchingNameBeSortedByNameAscending() {
+        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").build();
+        Book animalFarm = new BookTestBuilder().withName("Animal Farm").build();
+        bookRepository.save(wingsOfFire);
+        bookRepository.save(animalFarm);
+
+        List<Book> books = bookService.fetchAll("Animal");
+
+        assertEquals(1, books.size());
+        assertEquals("Animal Farm", books.get(0).getName());
     }
 }
