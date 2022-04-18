@@ -33,7 +33,10 @@ public class AddressController {
             schema = @Schema(implementation = ResponseEntity.class))})}
     )
     public ResponseEntity<AddressResponse> create(@RequestBody CreateAddressRequest createRequest, Principal principal) {
-        User user = userService.findByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = null;
+        if(principal != null) {
+            user = userService.findByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        }
         Address address = addressService.create(createRequest, user);
         AddressResponse addressResponse = address.toResponse();
         return new ResponseEntity<>(addressResponse, HttpStatus.CREATED);

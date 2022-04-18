@@ -45,4 +45,10 @@ class BookServiceTest {
         assertEquals(2, books.size());
         assertEquals("Animal Farm", books.get(0).getName());
     }
+
+    @Test
+    void shouldBeEmptyIfThereAreNoBooks() {
+        List<Book> books = bookService.fetchAll();
+        assertEquals(0, books.size());
+    }
 }
