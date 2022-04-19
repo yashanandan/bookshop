@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @RestController
 @RequestMapping(path = "/api")
 public class BookController {
@@ -35,8 +37,8 @@ public class BookController {
     List<BookResponse> list(@RequestParam String bookOrAuthorName) {
         List<Book> books = bookService.fetchAll(bookOrAuthorName);
         return books.stream()
-                .map(book -> book.toResponse())
-                .collect(Collectors.toList());
+                .map(Book::toResponse)
+                .collect(toList());
     }
 
 }
