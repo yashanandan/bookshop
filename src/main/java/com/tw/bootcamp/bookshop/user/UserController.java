@@ -33,6 +33,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Update user", description = "Update details for user with given id", tags = {"User Service"})
     ResponseEntity<Object> update(@PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest) throws UserNotFoundException {
         userService.update(id, updateUserRequest);
         return ResponseEntity.accepted().build();
