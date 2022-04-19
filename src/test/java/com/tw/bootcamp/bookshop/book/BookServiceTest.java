@@ -34,12 +34,6 @@ class BookServiceTest {
         assertEquals("title", books.get(0).getName());
     }
 
-    //Dummmy test(can be removed)
-    @Test
-    void dummyTest() {
-        assertTrue(false);
-    }
-
     @Test
     void shouldFetchAllBooksBeSortedByNameAscending() {
         Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").build();
