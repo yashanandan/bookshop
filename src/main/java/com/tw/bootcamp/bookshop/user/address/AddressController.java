@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/addresses")
+@RequestMapping("/api/addresses")
 public class AddressController {
     @Autowired
     private AddressService addressService;

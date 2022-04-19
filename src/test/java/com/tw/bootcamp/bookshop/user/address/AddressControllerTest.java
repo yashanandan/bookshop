@@ -43,7 +43,7 @@ class AddressControllerTest {
         when(addressService.create(eq(createRequest), any(User.class))).thenReturn(address);
         when(userService.findByEmail(anyString())).thenReturn(Optional.of(new UserTestBuilder().build()));
 
-        mockMvc.perform(post("/addresses")
+        mockMvc.perform(post("/api/addresses")
                 .content(objectMapper.writeValueAsString(createRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -62,7 +62,7 @@ class AddressControllerTest {
         when(addressService.create(any(), any())).thenThrow(new ConstraintViolationException(new HashSet<>()));
         when(userService.findByEmail(anyString())).thenReturn(Optional.of(new UserTestBuilder().build()));
 
-        mockMvc.perform(post("/addresses")
+        mockMvc.perform(post("/api/addresses")
                 .content(objectMapper.writeValueAsString(createRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())

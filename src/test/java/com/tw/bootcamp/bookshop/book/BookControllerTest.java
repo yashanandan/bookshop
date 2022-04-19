@@ -36,7 +36,7 @@ class BookControllerTest {
         books.add(book);
         when(bookService.fetchAll("")).thenReturn(books);
 
-        mockMvc.perform(get("/books").param("bookOrAuthorName","")
+        mockMvc.perform(get("/api/books").param("bookOrAuthorName","")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
@@ -47,7 +47,7 @@ class BookControllerTest {
     void shouldBeEmptyListWhenNoBooksPresent() throws Exception {
         when(bookService.fetchAll("")).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(get("/books").param("bookOrAuthorName","")
+        mockMvc.perform(get("/api/books").param("bookOrAuthorName","")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
@@ -62,7 +62,7 @@ class BookControllerTest {
         String bookOrAuthorName = "Harry";
         when(bookService.fetchAll(any(String.class))).thenReturn(books);
 
-        mockMvc.perform(get("/books").param("bookOrAuthorName",bookOrAuthorName)
+        mockMvc.perform(get("/api/books").param("bookOrAuthorName",bookOrAuthorName)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));

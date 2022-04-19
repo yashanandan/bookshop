@@ -37,7 +37,7 @@ public class OrderControllerTest {
 
         when(orderService.create(request)).thenReturn(order);
 
-        mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/api/orders")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                 )

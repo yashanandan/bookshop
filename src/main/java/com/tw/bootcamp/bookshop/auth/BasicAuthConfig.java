@@ -23,14 +23,14 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/addresses").permitAll()
-                .antMatchers(HttpMethod.POST,"/users").permitAll()
-                .antMatchers(HttpMethod.POST,"/orders").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/addresses").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/users").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/orders").permitAll()
                 .antMatchers(HttpMethod.GET,"/api-docs").permitAll()
                 .antMatchers(HttpMethod.GET,"/swagger-ui/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/books").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/books").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
