@@ -20,4 +20,8 @@ public class BookService {
         }
         return bookRepository.findAllByNameContainsIgnoreCaseOrAuthorNameContainsIgnoreCaseOrderByNameAsc( bookOrAuthorName, bookOrAuthorName);
     }
+
+    public Book findById(Long id) throws BookNotFoundException {
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found"));
+    }
 }
