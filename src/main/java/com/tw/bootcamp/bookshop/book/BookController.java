@@ -24,7 +24,7 @@ public class BookController {
 
 
     @GetMapping("/books")
-    @Operation(summary = "List all books", description = "Lists all books in bookshop", tags = {"Books Service"})
+    @Operation(summary = "Search and List all books", description = "Lists all books in bookshop matching with search criteria", tags = {"Books Service"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List all books",
                     content = {@Content(mediaType = "application/json",
