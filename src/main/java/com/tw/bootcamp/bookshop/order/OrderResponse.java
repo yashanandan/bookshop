@@ -14,8 +14,10 @@ import java.sql.Timestamp;
 public class OrderResponse {
 
     private Long id;
+    private String recipientName;
     private Book book;
     private Address address;
+    private int quantity;
     private Timestamp createdAt;
 
 }

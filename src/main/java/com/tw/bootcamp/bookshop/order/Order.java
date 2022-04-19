@@ -21,6 +21,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "recipient_name")
+    private String recipientName;
+
     @OneToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
@@ -29,13 +32,20 @@ public class Order {
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
+    private int quantity;
+
+    private double amount = 0.0;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    public Order(Book book, Address address) {
+    public Order(String recipientName, Book book, Address address, int quantity) {
+        this.recipientName = recipientName;
         this.book = book;
         this.address = address;
+        this.quantity = quantity;
         this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.amount = quantity * book.getPrice().getAmount();
     }
 
     public OrderResponse toResponse() {
@@ -47,8 +57,8 @@ public class Order {
                 .build();
     }
 
-    public static Order create(Book book, Address address) {
-        return new Order(book, address);
+    public static Order create(String recipientName, Book book, Address address, int quantity) {
+        return new Order(recipientName, book, address, quantity);
     }
 
 }
