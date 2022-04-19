@@ -32,6 +32,7 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew test
+      - run:
           when: on_fail
           command: |
             curl --header "Content-Type: application/json" \
