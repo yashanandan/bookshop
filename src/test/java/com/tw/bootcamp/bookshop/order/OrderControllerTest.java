@@ -32,7 +32,7 @@ public class OrderControllerTest {
 
     @Test
     void shouldCreateOrderWhenValid() throws Exception {
-        CreateOrderRequest request = createOrderRequest();
+        CreateOrderRequest request = OrderTestBuilder.createOrderRequest();
         Order order = new OrderTestBuilder().build();
 
         when(orderService.create(request)).thenReturn(order);
@@ -46,23 +46,5 @@ public class OrderControllerTest {
         verify(orderService, times(1)).create(request);
     }
 
-    private CreateOrderRequest createOrderRequest() {
-        return CreateOrderRequest.builder()
-                .bookId(1l)
-                .address(createAddress())
-                .quantity(1)
-                .recipientName("J Doe")
-                .build();
-    }
-
-    private CreateAddressRequest createAddress() {
-        return CreateAddressRequest.builder()
-                .lineNoOne("4 Privet Drive")
-                .lineNoTwo("Little Whinging")
-                .city("Godstone")
-                .pinCode("A22 001")
-                .country("Surrey")
-                .build();
-    }
 
 }

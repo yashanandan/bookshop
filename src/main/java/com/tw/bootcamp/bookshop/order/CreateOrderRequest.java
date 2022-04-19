@@ -19,4 +19,14 @@ public class CreateOrderRequest {
     private int quantity;
 
     private String recipientName;
+
+    @Override
+    public String toString() {
+        return "CreateOrderRequest{" +
+                "bookId=" + bookId +
+                ", address=" + address +
+                ", quantity=" + quantity +
+                ", recipientName='" + recipientName + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.BookTestBuilder;
 import com.tw.bootcamp.bookshop.user.address.AddressTestBuilder;
+import com.tw.bootcamp.bookshop.user.address.CreateAddressRequest;
 
 public class OrderTestBuilder {
 
@@ -16,6 +17,26 @@ public class OrderTestBuilder {
                 .amount(300)
                 .quantity(1);
     }
+
+    public static CreateOrderRequest createOrderRequest() {
+        return CreateOrderRequest.builder()
+                .bookId(1l)
+                .address(createAddress())
+                .quantity(1)
+                .recipientName("J Doe")
+                .build();
+    }
+
+    private static CreateAddressRequest createAddress() {
+        return CreateAddressRequest.builder()
+                .lineNoOne("4 Privet Drive")
+                .lineNoTwo("Little Whinging")
+                .city("Godstone")
+                .pinCode("A22 001")
+                .country("Surrey")
+                .build();
+    }
+
 
     public Order build() {
         return orderBuilder.build();

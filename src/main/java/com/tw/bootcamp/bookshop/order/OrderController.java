@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.order;
 
+import com.tw.bootcamp.bookshop.book.BookNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +27,7 @@ public class OrderController {
             description = "Order created", content = {@Content(mediaType = "application/json",
             schema = @Schema(implementation = ResponseEntity.class))})}
     )
-    public ResponseEntity create(@RequestBody CreateOrderRequest createOrderRequest) {
+    public ResponseEntity create(@RequestBody CreateOrderRequest createOrderRequest) throws BookNotFoundException {
         Order order = orderService.create(createOrderRequest);
         return new ResponseEntity<>(new OrderResponse(order),HttpStatus.CREATED);
     }
