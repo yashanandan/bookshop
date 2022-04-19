@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class BookServiceTest {
@@ -31,6 +32,12 @@ class BookServiceTest {
 
         assertEquals(1, books.size());
         assertEquals("title", books.get(0).getName());
+    }
+
+    //Dummmy test(can be removed)
+    @Test
+    void dummyTest() {
+        assertTrue(false);
     }
 
     @Test

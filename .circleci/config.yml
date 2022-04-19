@@ -31,19 +31,12 @@ jobs:
       - image: openjdk:8-jdk-alpine
     steps:
       - checkout
+      - run: apk add --no-cache curl
       - run: ./gradlew test
-      - run:
-          when: on_fail
-          command: |
-            curl --header "Content-Type: application/json" \
-            --request POST \
-            --data "{\"cards\":[{\"header\":{\"title\":\"Oops. One or more Test(s) failed for ${CIRCLE_JOB}.\",\"subtitle\":\"${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}\",\"imageUrl\":\"https://png.pngtree.com/svg/20170406/icon_failed__1325447.png\",\"imageStyle\":\"IMAGE\"},\"sections\":[{\"widgets\":[{\"keyValue\":{\"topLabel\":\"${CIRCLE_TAG}\",\"content\":\"Credits - ${CIRCLE_USERNAME}\"}}]},{\"widgets\":[{\"buttons\":[{\"textButton\":{\"text\":\"DETAILS\",\"onClick\":{\"openLink\":{\"url\":\"${CIRCLE_BUILD_URL}\"}}}}]}]}]}]}" \
-            "$CHAT_WEBHOOK_URL"
       - store_test_results:
           path: build/test-results
       - store_artifacts:
           path: build/test-results
-      - run: apk add --no-cache curl
 #      The following is a hook to notify a channel when the build has passed or failed.
 #      To make it work you need to set the CHAT_WEBHOOK_URL environement variable in CIRCLE CI.
 #      The value of this variable is the webhook URL of your team's google space. (https://developers.google.com/chat/how-tos/webhooks)
