@@ -9,9 +9,11 @@ public class OrderTestBuilder {
 
     public OrderTestBuilder() {
         this.orderBuilder = Order.builder()
+                .id(1l)
                 .recipientName("J Doe")
                 .address(new AddressTestBuilder().build())
                 .book(new BookTestBuilder().build())
+                .amount(300)
                 .quantity(1);
     }
 

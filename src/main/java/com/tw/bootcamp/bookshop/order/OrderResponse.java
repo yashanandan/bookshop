@@ -19,5 +19,15 @@ public class OrderResponse {
     private Address address;
     private int quantity;
     private Timestamp createdAt;
+    private double amount;
 
+    public OrderResponse(Order order) {
+        this.id = order.getId();
+        this.recipientName = order.getRecipientName();
+        this.book = order.getBook();
+        this.address = order.getAddress();
+        this.quantity = order.getQuantity();
+        this.createdAt = order.getCreatedAt();
+        this.amount = order.getAmount();
+    }
 }

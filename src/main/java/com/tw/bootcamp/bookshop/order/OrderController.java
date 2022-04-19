@@ -27,7 +27,7 @@ public class OrderController {
             schema = @Schema(implementation = ResponseEntity.class))})}
     )
     public ResponseEntity create(@RequestBody CreateOrderRequest createOrderRequest) {
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Order order = orderService.create(createOrderRequest);
+        return new ResponseEntity<>(new OrderResponse(order),HttpStatus.CREATED);
     }
 }

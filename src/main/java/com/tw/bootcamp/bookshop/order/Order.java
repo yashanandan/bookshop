@@ -34,6 +34,7 @@ public class Order {
 
     private int quantity;
 
+    @Column(columnDefinition = "NUMERIC")
     private double amount = 0.0;
 
     @Column(name = "created_at")
