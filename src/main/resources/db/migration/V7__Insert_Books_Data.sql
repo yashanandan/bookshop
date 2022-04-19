@@ -1,0 +1,10 @@
+INSERT INTO books (name, amount, author_name, currency) VALUES('Harry Potter 1', 100, 'JK Rolling', 'USD');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Harry Potter 2', 200, 'JK Rolling', 'USD');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Harry Potter 3', 300, 'JK Rolling', 'USD');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Adventures of Tom Sawyer', 100, 'Mark Twain', 'GBP');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Alice in Wonderland', 200, 'Lewis Carrol', 'GBP');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Agni Veena', 300, 'Kazi Nasrul Islam', 'INR');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Ancient Mariner', 100, 'Coleridge', 'INR');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Ben Hur', 200, 'Lewis Wallace', 'INR');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Around the World in eighty days', 400, 'Jules Verne', 'USD');
+INSERT INTO books (name, amount, author_name, currency) VALUES('Baburnama', 500, 'Babur', 'USD');
