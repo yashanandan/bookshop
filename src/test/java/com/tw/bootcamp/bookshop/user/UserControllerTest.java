@@ -45,7 +45,7 @@ class UserControllerTest {
         when(userService.create(userCredentials)).thenReturn(user);
         UserResponse userResponse = UserResponse.builder().id(user.getId().toString()).email(email).build();
 
-        mockMvc.perform(post("/api/users")
+        mockMvc.perform(post("/users")
                 .content(objectMapper.writeValueAsString(userCredentials))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -59,7 +59,7 @@ class UserControllerTest {
         CreateUserRequest userCredentials = buildCreateUserRequest();
         when(userService.create(userCredentials)).thenThrow(new InvalidEmailException());
 
-        mockMvc.perform(post("/api/users")
+        mockMvc.perform(post("/users")
                 .content(objectMapper.writeValueAsString(userCredentials))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())
@@ -72,7 +72,7 @@ class UserControllerTest {
         Set<ConstraintViolation<User>> violations = validator.validate(User.create(userCredentials));
         when(userService.create(userCredentials)).thenThrow(new ConstraintViolationException(violations));
 
-        mockMvc.perform(post("/api/users")
+        mockMvc.perform(post("/users")
                 .content(objectMapper.writeValueAsString(userCredentials))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())
@@ -90,7 +90,7 @@ class UserControllerTest {
                 .address(CreateAddressRequest.builder().lineNoOne("line one").city("abc").build())
                 .build();
 
-        mockMvc.perform(patch("/api/users/1")
+        mockMvc.perform(patch("/users/1")
                 .content(objectMapper.writeValueAsString(updateUserRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
