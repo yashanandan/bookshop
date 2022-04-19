@@ -1,10 +1,7 @@
 package com.tw.bootcamp.bookshop.book;
 
 import com.tw.bootcamp.bookshop.money.Money;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "books")
+@EqualsAndHashCode
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

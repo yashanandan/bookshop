@@ -2,10 +2,8 @@ package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.Book;
 import com.tw.bootcamp.bookshop.user.address.Address;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,6 +14,7 @@ import java.sql.Timestamp;
 @Getter
 @Entity
 @Table(name = "orders")
+@EqualsAndHashCode
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +37,7 @@ public class Order {
     private double amount = 0.0;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private Timestamp createdAt;
 
     public Order(String recipientName, Book book, Address address, int quantity) {
@@ -45,7 +45,6 @@ public class Order {
         this.book = book;
         this.address = address;
         this.quantity = quantity;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
         this.amount = quantity * book.getPrice().getAmount();
     }
 

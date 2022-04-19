@@ -3,6 +3,7 @@ package com.tw.bootcamp.bookshop.user.address;
 import com.tw.bootcamp.bookshop.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @Entity
 @Table(name = "addresses")
+@EqualsAndHashCode
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
