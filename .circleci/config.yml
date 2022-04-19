@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew test
-        when: on_fail
+          when: on_fail
           command: |
             curl --header "Content-Type: application/json" \
             --request POST \
