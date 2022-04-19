@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.tw.bootcamp'
@@ -37,6 +38,23 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.11'
 }
 
+jacocoTestReport {
+	dependsOn test
+	reports {
+		html.required = true
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.5
+			}
+		}
+	}
+}
+
 test {
 	systemProperty 'spring.profiles.active', 'test'
 	useJUnitPlatform()
@@ -44,3 +62,5 @@ test {
 		junitXml.enabled = true
 	}
 }
+
+check.dependsOn jacocoTestCoverageVerification
