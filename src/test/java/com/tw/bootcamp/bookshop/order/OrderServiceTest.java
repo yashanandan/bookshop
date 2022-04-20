@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -34,19 +35,42 @@ public class OrderServiceTest {
     OrderRepository orderRepository;
 
     @Test
-    void shouldCreateOrderWhenValid() throws BookNotFoundException {
+    void shouldCreateOrderWhenValid() throws BookNotFoundException, BookOutOfStockException, OrderNotPlacedException {
 
         CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
-        double totalAmount = (createOrderRequest.getQuantity() * new BookTestBuilder().build().getPrice().getAmount());
-        when(bookService.findById(1l)).thenReturn(new BookTestBuilder().build());
+        double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
+        when(bookService.findById(1l)).thenReturn(getBook());
         when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
 
-        Order notMockedOrder = new Order(createOrderRequest.getRecipientName(), new BookTestBuilder().build(), new AddressTestBuilder().build(), createOrderRequest.getQuantity());
+        Order notMockedOrder = new Order(createOrderRequest.getRecipientName(), getBook(), new AddressTestBuilder().build(), createOrderRequest.getQuantity());
         when(orderRepository.save(notMockedOrder)).thenReturn(new OrderTestBuilder().build());
 
         Order order = orderService.create(createOrderRequest);
 
         assertEquals(order.getQuantity(),createOrderRequest.getQuantity());
         assertEquals(order.getAmount(),totalAmount);
+    }
+
+    @Test
+    void shouldDecreaseBookQuantityIfOrderIsValid() throws BookNotFoundException, BookOutOfStockException, OrderNotPlacedException {
+        CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
+        double expectedTotalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
+        int expectedCountAvailable = getBook().getCountAvailable().intValue() - createOrderRequest.getQuantity();
+        Long expectedCountAvailableAsLong = new Long(expectedCountAvailable);
+
+        when(bookService.findById(1l)).thenReturn(getBook());
+        when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
+        Order notMockedOrder = new Order(createOrderRequest.getRecipientName(), getBook(), new AddressTestBuilder().build(), createOrderRequest.getQuantity());
+        when(orderRepository.save(notMockedOrder)).thenReturn(new OrderTestBuilder(expectedCountAvailableAsLong).build());
+        when(bookService.save(any())).thenReturn(new BookTestBuilder().withBookCountAvailable(expectedCountAvailableAsLong).build());
+        Order order = orderService.create(createOrderRequest);
+
+        assertEquals(createOrderRequest.getQuantity(), order.getQuantity());
+        assertEquals(expectedCountAvailable, order.getBook().getCountAvailable());
+        assertEquals(expectedTotalAmount, order.getAmount());
+    }
+
+    private Book getBook() {
+        return new BookTestBuilder().build();
     }
 }

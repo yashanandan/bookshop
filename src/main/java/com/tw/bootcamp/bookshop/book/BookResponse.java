@@ -13,4 +13,10 @@ public class BookResponse {
     private String name;
     private String authorName;
     private Money price;
+    private Long countAvailable;
+    private String isbn;
+    private Long isbn13;
+    private String image;
+    private double avgRating;
+    private int publicationYear;
 }

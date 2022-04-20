@@ -1,6 +1,8 @@
 package com.tw.bootcamp.bookshop.book;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,5 +25,9 @@ public class BookService {
 
     public Book findById(Long id) throws BookNotFoundException {
         return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found"));
+    }
+
+    public Book save(Book book) {
+        return bookRepository.save(book);
     }
 }
