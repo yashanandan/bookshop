@@ -91,17 +91,18 @@ class BookServiceTest {
 
         Book savedBook = bookService.saveBookFromCsv(BookTestBuilder.getBookCsvModel());
 
-        // mocking for getting books
+        // mock for getting the books
         when(bookRepository.findAllByOrderByNameAsc()).thenReturn(Collections.singletonList(savedBook));
 
         List<Book> books = bookService.fetchAll("");
 
         assertEquals(1, books.size());
         assertEquals("City of Bones (The Mortal Instruments, #1)", books.get(0).getName());
+        assertEquals(BookTestBuilder.getBookCsvModel().getBooksCount(), books.get(0).getCountAvailable());
     }
 
     @Test
-    void shouldIncreseBookCountWhenBookIsAvailable() {
+    void shouldIncreaseBookCountWhenBookIsAvailable() {
         // mock the isbn13 book exists
         Book existingBook = BookTestBuilder.getBookFromCsv(BookTestBuilder.getBookCsvModel());
         when(mockedBookRepository.findByIsbn13(BookTestBuilder.getBookCsvModel().getIsbn13())).thenReturn(existingBook);
@@ -110,7 +111,7 @@ class BookServiceTest {
         Book bookToBeUploaded = bookService.saveBookFromCsv(BookTestBuilder.getBookCsvModel());
 
         // assert mocked book has count increased
-        assertEquals(BookTestBuilder.getBookCsvModel().getBooksCount()*2, bookToBeUploaded.getCountAvailable());
+        assertEquals(BookTestBuilder.getBookCsvModel().getBooksCount() * 2, bookToBeUploaded.getCountAvailable());
 
     }
 }
