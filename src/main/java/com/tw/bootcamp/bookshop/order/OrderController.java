@@ -46,7 +46,7 @@ public class OrderController {
         try {
             orderService.makePayment(orderId, paymentDetails);
         } catch(PaymentAlreadyDoneException ex) {
-            return new ResponseEntity<>(HttpStatus.valueOf(231));
+            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
