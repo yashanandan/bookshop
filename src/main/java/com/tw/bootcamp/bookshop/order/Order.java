@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "orders")
-@EqualsAndHashCode
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,19 +58,6 @@ public class Order {
         this.amount = quantity * book.getPrice().getAmount();
         this.paymentMode = paymentMode;
         this.paymentStatus = PaymentStatus.PENDING;
-    }
-
-    public OrderResponse toResponse() {
-        return OrderResponse.builder()
-                .id(id)
-                .book(book)
-                .address(address)
-                .createdAt(createdAt)
-                .build();
-    }
-
-    public static Order create(String recipientName, Book book, Address address, int quantity, PaymentMode paymentMode) {
-        return new Order(recipientName, book, address, quantity, paymentMode);
     }
 
 }

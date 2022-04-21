@@ -23,15 +23,4 @@ public class CreateOrderRequest {
 
     private PaymentMode paymentMode;
 
-    @Override
-    public String toString() {
-        return "CreateOrderRequest{" +
-                "bookId=" + bookId +
-                ", address=" + address +
-                ", quantity=" + quantity +
-                ", recipientName='" + recipientName + '\'' +
-                ", paymentMode=" + paymentMode +
-                '}';
-    }
-
 }

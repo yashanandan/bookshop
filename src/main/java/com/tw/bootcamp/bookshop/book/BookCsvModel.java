@@ -37,21 +37,4 @@ public class BookCsvModel {
     @CsvBindByName(column = "average_rating")
     private Double averageRating;
 
-    @Override
-    public String toString() {
-        return "BookCsvModel{" +
-                "author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", smallImageUrl='" + smallImageUrl + '\'' +
-                ", price=" + price +
-                ", booksCount=" + booksCount +
-                ", isbn='" + isbn + '\'' +
-                ", isbn13='" + isbn13 + '\'' +
-                ", originalPublicationYear='" + originalPublicationYear + '\'' +
-                ", originalTitle='" + originalTitle + '\'' +
-                ", languageCode='" + languageCode + '\'' +
-                ", averageRating=" + averageRating +
-                '}';
-    }
 }

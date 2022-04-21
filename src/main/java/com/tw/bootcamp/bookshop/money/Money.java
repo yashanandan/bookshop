@@ -12,7 +12,6 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Embeddable
-@NoArgsConstructor
 public class Money {
     private String currency;
     @Column(columnDefinition = "NUMERIC")

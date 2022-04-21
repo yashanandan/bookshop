@@ -10,9 +10,7 @@ import java.sql.Timestamp;
 
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class OrderResponse {
 
     private Long id;

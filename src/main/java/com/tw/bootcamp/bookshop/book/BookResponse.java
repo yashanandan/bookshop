@@ -6,9 +6,7 @@ import org.springframework.lang.Nullable;
 
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class BookResponse {
     private Long id;
     private String name;
