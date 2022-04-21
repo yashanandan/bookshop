@@ -53,7 +53,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void makePayment(long orderId, PaymentDetails paymentDetails) throws OrderException {
+    public void makePayment(long orderId, PaymentDetails paymentDetails) throws OrderNotFoundException, PaymentAlreadyDoneException, PaymentException {
         validateOrderForPayment(orderId);
         try {
             restTemplate.postForObject("https://tw-mock-credit-service.herokuapp.com/payments", paymentDetails, ResponseEntity.class);
@@ -64,8 +64,8 @@ public class OrderService {
         orderRepository.updatePaymentStatus(orderId, PaymentStatus.COMPLETE);
     }
 
-    private void validateOrderForPayment(long id) throws OrderException {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderException("Order Not Found"));
+    private void validateOrderForPayment(long id) throws PaymentAlreadyDoneException, OrderNotFoundException {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order Not Found"));
         if (order.getPaymentStatus() == PaymentStatus.COMPLETE) {
             throw new PaymentAlreadyDoneException("Order is already paid");
         }

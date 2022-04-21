@@ -1,6 +1,7 @@
 package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.*;
+import com.tw.bootcamp.bookshop.order.payment.PaymentAlreadyDoneException;
 import com.tw.bootcamp.bookshop.order.payment.PaymentDetails;
 import com.tw.bootcamp.bookshop.order.payment.PaymentException;
 import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
@@ -50,7 +51,7 @@ public class OrderServiceTest {
 
         CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
         double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
-        when(bookService.findById(1l)).thenReturn(getBook());
+        when(bookService.findById(1L)).thenReturn(getBook());
         when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
         when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder().build());
 
@@ -65,9 +66,9 @@ public class OrderServiceTest {
         CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
         double expectedTotalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
         int expectedCountAvailable = getBook().getCountAvailable().intValue() - createOrderRequest.getQuantity();
-        Long expectedCountAvailableAsLong = new Long(expectedCountAvailable);
+        Long expectedCountAvailableAsLong = (long) expectedCountAvailable;
 
-        when(bookService.findById(1l)).thenReturn(getBook());
+        when(bookService.findById(1L)).thenReturn(getBook());
         when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
         when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder(expectedCountAvailableAsLong).build());
         when(bookService.save(any())).thenReturn(new BookTestBuilder().withBookCountAvailable(expectedCountAvailableAsLong).build());
@@ -84,7 +85,7 @@ public class OrderServiceTest {
 
     @Test
     void shouldMakePaymentWhenOrderIsValid() throws OrderException {
-        Long orderId = 1l;
+        long orderId = 1L;
         PaymentDetails paymentDetails = PaymentTestBuilder.createPaymentDetails();
 
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(new OrderTestBuilder().build()));
@@ -96,37 +97,38 @@ public class OrderServiceTest {
 
     @Test
     void throwsPaymentExceptionWhenPaymentIsUnsuccessful() throws Exception {
-        Long orderId = 1l;
+        long orderId = 1L;
         PaymentDetails paymentDetails = PaymentTestBuilder.createPaymentDetails();
 
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(new OrderTestBuilder().build()));
         when(restTemplate.postForObject(any(String.class), any(Object.class), any())).thenThrow(new RestClientException("Card details are invalid"));
         doNothing().when(orderRepository).updatePaymentStatus(any(Integer.class), any(PaymentStatus.class));
 
-        assertThrows(PaymentException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
+        assertThrows(PaymentException.class, () -> orderService.makePayment(orderId, paymentDetails));
     }
 
     @Test
     void throwsOrderExceptionWhenOrderIsInvalid() throws OrderException {
-        Long orderId = 1l;
+        long orderId = 1L;
         PaymentDetails paymentDetails = PaymentTestBuilder.createPaymentDetails();
 
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-        OrderException orderException = assertThrows(OrderException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
+        OrderException orderException = assertThrows(OrderException.class, () -> orderService.makePayment(orderId, paymentDetails));
         assertEquals("Order Not Found",orderException.getMessage());
     }
 
     @Test
-    void throwsOrderExceptionWhenOrderStatusIsComplete() throws OrderException {
-        Long orderId = 1l;
+    void throwsPaymentAlreadyDoneExceptionWhenOrderStatusIsComplete() throws OrderException {
+        long orderId = 1L;
         PaymentDetails paymentDetails = PaymentTestBuilder.createPaymentDetails();
         Order order = new OrderTestBuilder().build();
         order.setPaymentStatus(PaymentStatus.COMPLETE);
 
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.of(order));
 
-        OrderException orderException = assertThrows(OrderException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
-        assertEquals("Order is already paid",orderException.getMessage());
+        PaymentAlreadyDoneException paymentAlreadyDoneException =
+                assertThrows(PaymentAlreadyDoneException.class, () -> orderService.makePayment(orderId, paymentDetails));
+        assertEquals("Order is already paid",paymentAlreadyDoneException.getMessage());
     }
 }
