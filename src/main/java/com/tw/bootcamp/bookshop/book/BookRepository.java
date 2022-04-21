@@ -10,4 +10,6 @@ public interface BookRepository extends JpaRepository<Book, Long>  {
     List<Book> findAllByOrderByNameAsc();
 
     List<Book> findAllByNameContainsIgnoreCaseOrAuthorNameContainsIgnoreCaseOrderByNameAsc(String name, String authorName);
+
+    Book findByIsbn13(Long isbn13);
 }

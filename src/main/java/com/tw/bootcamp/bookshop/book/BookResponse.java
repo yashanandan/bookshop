@@ -2,6 +2,7 @@ package com.tw.bootcamp.bookshop.book;
 
 import com.tw.bootcamp.bookshop.money.Money;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 @Builder
 @Getter
@@ -17,6 +18,6 @@ public class BookResponse {
     private String isbn;
     private Long isbn13;
     private String image;
-    private double avgRating;
-    private int publicationYear;
+    private Double avgRating;
+    private Integer publicationYear;
 }

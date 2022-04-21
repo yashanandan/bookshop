@@ -36,6 +36,8 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.11'
+
+	implementation 'com.opencsv:opencsv:5.6'
 }
 
 jacocoTestReport {

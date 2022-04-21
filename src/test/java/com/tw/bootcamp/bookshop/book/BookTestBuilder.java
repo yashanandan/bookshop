@@ -35,4 +35,22 @@ public class BookTestBuilder {
         bookBuilder.countAvailable(countAvailable);
         return this;
     }
+
+    public static BookCsvModel getBookCsvModel(){
+        return new BookCsvModel(
+                "Cassandra Clare",
+                "City of Bones (The Mortal Instruments, #1)",
+                "https://images.gr-assets.com/books/1432730315m/256683.jpg",
+                "https://images.gr-assets.com/books/1432730315s/256683.jpg",
+                1461.0,
+                178l,
+                "1416914285",
+                9781416914280l,
+                2007,
+                "City of Bones","eng",4.12);
+    }
+
+    public static Book getBookFromCsv(BookCsvModel bookCsvModel){
+        return new Book(bookCsvModel);
+    }
 }

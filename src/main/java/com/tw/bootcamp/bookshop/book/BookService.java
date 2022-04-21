@@ -1,8 +1,6 @@
 package com.tw.bootcamp.bookshop.book;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +27,17 @@ public class BookService {
 
     public Book save(Book book) {
         return bookRepository.save(book);
+    }
+
+    public Book saveBookFromCsv(BookCsvModel bookCsv) {
+        Book existingBook = bookRepository.findByIsbn13(bookCsv.getIsbn13());
+        if(existingBook != null){
+            existingBook.update(bookCsv);
+            bookRepository.save(existingBook);
+        } else {
+            existingBook = new Book(bookCsv);
+            bookRepository.save(existingBook);
+        }
+        return existingBook;
     }
 }

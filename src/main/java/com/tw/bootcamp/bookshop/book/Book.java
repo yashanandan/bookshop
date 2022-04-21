@@ -29,6 +29,18 @@ public class Book {
     @Column(columnDefinition = "NUMERIC")
     private Integer publicationYear;
 
+    public Book(BookCsvModel bookCsv) {
+        this.name = bookCsv.getTitle();
+        this.authorName = bookCsv.getAuthor();
+        this.price = Money.rupees(bookCsv.getPrice());
+        this.countAvailable = bookCsv.getBooksCount();
+        this.isbn = bookCsv.getIsbn();
+        this.isbn13 = bookCsv.getIsbn13();
+        this.image = bookCsv.getImageUrl();
+        this.avgRating = bookCsv.getAverageRating();
+        this.publicationYear = bookCsv.getOriginalPublicationYear();
+    }
+
     public BookResponse toResponse() {
         return BookResponse.builder()
                 .id(id)
@@ -46,5 +58,17 @@ public class Book {
 
     public void setCountAvailable(Long countAvailable) {
         this.countAvailable = countAvailable;
+    }
+
+    public void update(BookCsvModel bookCsv) {
+        this.name = bookCsv.getTitle();
+        this.authorName = bookCsv.getAuthor();
+        this.price = Money.rupees(bookCsv.getPrice());
+        this.countAvailable = this.countAvailable + bookCsv.getBooksCount();
+        this.isbn = bookCsv.getIsbn();
+        this.isbn13 = bookCsv.getIsbn13();
+        this.image = bookCsv.getImageUrl();
+        this.avgRating = bookCsv.getAverageRating();
+        this.publicationYear = bookCsv.getOriginalPublicationYear();
     }
 }

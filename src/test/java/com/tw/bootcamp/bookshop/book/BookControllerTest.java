@@ -6,14 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,5 +74,28 @@ class BookControllerTest {
         verify(bookService, times(1)).fetchAll(bookOrAuthorName);
 
     }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldUploadFileWhenValid() throws Exception {
+        String csv = "id,author,title,image_url,small_image_url,price,books_count,isbn,isbn13,original_publication_year,original_title,language_code,average_rating\n" +
+                "51,Cassandra Clare,\"City of Bones (The Mortal Instruments, #1)\",https://images.gr-assets.com/books/1432730315m/256683.jpg,https://images.gr-assets.com/books/1432730315s/256683.jpg,1461,178,1416914285,9781416914280,2007,City of Bones,eng,4.12";
+        MockMultipartFile file = new MockMultipartFile("file",
+                "csv_test_2_.csv",
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                csv.getBytes());
+
+        when(bookService.saveBookFromCsv(getBookCsvModel())).thenReturn(getBookFromCsv());
+        mockMvc.perform(multipart("/books/upload").file(file)).andExpect(status().isOk());
+    }
+
+    private BookCsvModel getBookCsvModel() {
+        return BookTestBuilder.getBookCsvModel();
+    }
+
+    private Book getBookFromCsv() {
+        return BookTestBuilder.getBookFromCsv(getBookCsvModel());
+    }
+
 
 }
