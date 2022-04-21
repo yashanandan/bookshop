@@ -1,7 +1,6 @@
 package com.tw.bootcamp.bookshop.order;
 
-import com.tw.bootcamp.bookshop.book.BookTestBuilder;
-import com.tw.bootcamp.bookshop.user.address.AddressTestBuilder;
+import com.tw.bootcamp.bookshop.order.payment.PaymentDetails;
 
 public class PaymentTestBuilder {
 

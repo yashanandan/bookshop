@@ -2,6 +2,10 @@ package com.tw.bootcamp.bookshop.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tw.bootcamp.bookshop.book.*;
+import com.tw.bootcamp.bookshop.order.payment.PaymentAlreadyDoneException;
+import com.tw.bootcamp.bookshop.order.payment.PaymentDetails;
+import com.tw.bootcamp.bookshop.order.payment.PaymentException;
+import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.Address;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +58,7 @@ public class OrderService {
         try {
             restTemplate.postForObject("https://tw-mock-credit-service.herokuapp.com/payments", paymentDetails, ResponseEntity.class);
         } catch (RestClientException ex) {
-            throw new OrderException(ex.getMessage());
+            throw new PaymentException(ex.getMessage());
         }
         orderRepository.updatePaymentStatus(orderId, PaymentStatus.COMPLETE);
     }
@@ -62,7 +66,7 @@ public class OrderService {
     private void validateOrderForPayment(long id) throws OrderException {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderException("Order Not Found"));
         if (order.getPaymentStatus() == PaymentStatus.COMPLETE) {
-            throw new OrderException("Order is already paid");
+            throw new PaymentAlreadyDoneException("Order is already paid");
         }
     }
 }

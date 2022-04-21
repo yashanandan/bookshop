@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.order;
 
+import com.tw.bootcamp.bookshop.order.payment.PaymentMode;
 import com.tw.bootcamp.bookshop.user.address.CreateAddressRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

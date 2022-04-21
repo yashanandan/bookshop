@@ -1,4 +1,4 @@
-package com.tw.bootcamp.bookshop.order;
+package com.tw.bootcamp.bookshop.order.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

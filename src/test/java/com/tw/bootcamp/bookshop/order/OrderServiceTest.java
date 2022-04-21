@@ -1,6 +1,8 @@
 package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.*;
+import com.tw.bootcamp.bookshop.order.payment.PaymentDetails;
+import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
 import com.tw.bootcamp.bookshop.user.address.AddressTestBuilder;
 import org.junit.jupiter.api.Test;

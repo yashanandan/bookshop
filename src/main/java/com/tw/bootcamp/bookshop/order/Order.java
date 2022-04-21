@@ -1,6 +1,8 @@
 package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.Book;
+import com.tw.bootcamp.bookshop.order.payment.PaymentMode;
+import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.Address;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

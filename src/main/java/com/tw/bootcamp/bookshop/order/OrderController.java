@@ -2,6 +2,8 @@ package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.BookNotFoundException;
 import com.tw.bootcamp.bookshop.book.BookOutOfStockException;
+import com.tw.bootcamp.bookshop.order.payment.PaymentAlreadyDoneException;
+import com.tw.bootcamp.bookshop.order.payment.PaymentDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,9 +37,17 @@ public class OrderController {
     @Operation(summary = "Create order payment", description = "Creates payments for the order", tags = {"Order Service"})
     @ApiResponses(value = {@ApiResponse(responseCode = "201",
             description = "Order payment created", content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = ResponseEntity.class))})}
+            schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "231",
+                    description = "Payment already done. No need to repay.", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseEntity.class))})}
     )
-    public void payment(@PathVariable long orderId, @RequestBody PaymentDetails paymentDetails) throws OrderException {
-        orderService.makePayment(orderId, paymentDetails);
+    public ResponseEntity payment(@PathVariable long orderId, @RequestBody PaymentDetails paymentDetails) throws OrderException {
+        try {
+            orderService.makePayment(orderId, paymentDetails);
+        } catch(PaymentAlreadyDoneException ex) {
+            return new ResponseEntity<>(HttpStatus.valueOf(231));
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
