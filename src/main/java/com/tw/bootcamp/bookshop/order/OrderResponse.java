@@ -1,6 +1,8 @@
 package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.Book;
+import com.tw.bootcamp.bookshop.order.payment.PaymentMode;
+import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.Address;
 import lombok.*;
 
@@ -20,6 +22,8 @@ public class OrderResponse {
     private int quantity;
     private Timestamp createdAt;
     private double amount;
+    private PaymentStatus paymentStatus;
+    private PaymentMode paymentMode;
 
     public OrderResponse(Order order) {
         this.id = order.getId();
@@ -29,5 +33,7 @@ public class OrderResponse {
         this.quantity = order.getQuantity();
         this.createdAt = order.getCreatedAt();
         this.amount = order.getAmount();
+        this.paymentStatus = order.getPaymentStatus();
+        this.paymentMode = order.getPaymentMode();
     }
 }

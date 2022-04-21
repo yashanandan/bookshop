@@ -58,6 +58,7 @@ public class OrderService {
         try {
             restTemplate.postForObject("https://tw-mock-credit-service.herokuapp.com/payments", paymentDetails, ResponseEntity.class);
         } catch (RestClientException ex) {
+            orderRepository.updatePaymentStatus(orderId, PaymentStatus.FAILED);
             throw new PaymentException(ex.getMessage());
         }
         orderRepository.updatePaymentStatus(orderId, PaymentStatus.COMPLETE);

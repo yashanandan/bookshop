@@ -2,6 +2,7 @@ package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.*;
 import com.tw.bootcamp.bookshop.order.payment.PaymentDetails;
+import com.tw.bootcamp.bookshop.order.payment.PaymentException;
 import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
 import com.tw.bootcamp.bookshop.user.address.AddressTestBuilder;
@@ -94,7 +95,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void throwsOrderExceptionWhenPaymentIsUnsuccessful() throws Exception {
+    void throwsPaymentExceptionWhenPaymentIsUnsuccessful() throws Exception {
         Long orderId = 1l;
         PaymentDetails paymentDetails = PaymentTestBuilder.createPaymentDetails();
 
@@ -102,7 +103,7 @@ public class OrderServiceTest {
         when(restTemplate.postForObject(any(String.class), any(Object.class), any())).thenThrow(new RestClientException("Card details are invalid"));
         doNothing().when(orderRepository).updatePaymentStatus(any(Integer.class), any(PaymentStatus.class));
 
-        assertThrows(OrderException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
+        assertThrows(PaymentException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
     }
 
     @Test
@@ -113,7 +114,7 @@ public class OrderServiceTest {
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
         OrderException orderException = assertThrows(OrderException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
-        assertEquals(orderException.getMessage(), "Order Not Found");
+        assertEquals("Order Not Found",orderException.getMessage());
     }
 
     @Test
@@ -126,6 +127,6 @@ public class OrderServiceTest {
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.of(order));
 
         OrderException orderException = assertThrows(OrderException.class, () -> orderService.makePayment(Math.toIntExact(orderId), paymentDetails));
-        assertEquals(orderException.getMessage(), "Order is already paid");
+        assertEquals("Order is already paid",orderException.getMessage());
     }
 }
