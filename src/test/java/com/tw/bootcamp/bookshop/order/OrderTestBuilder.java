@@ -16,6 +16,8 @@ public class OrderTestBuilder {
                 .address(new AddressTestBuilder().build())
                 .book(new BookTestBuilder().build())
                 .amount(300)
+                .paymentStatus(PaymentStatus.PENDING)
+                .paymentMode(PaymentMode.CARD)
                 .quantity(1);
     }
 
@@ -26,6 +28,8 @@ public class OrderTestBuilder {
                 .address(new AddressTestBuilder().build())
                 .book(new BookTestBuilder().withBookCountAvailable(countAvailable).build())
                 .amount(300)
+                .paymentMode(PaymentMode.COD)
+                .paymentStatus(PaymentStatus.PENDING)
                 .quantity(1);
     }
 

@@ -20,6 +20,8 @@ public class CreateOrderRequest {
 
     private String recipientName;
 
+    private PaymentMode paymentMode;
+
     @Override
     public String toString() {
         return "CreateOrderRequest{" +
@@ -27,6 +29,8 @@ public class CreateOrderRequest {
                 ", address=" + address +
                 ", quantity=" + quantity +
                 ", recipientName='" + recipientName + '\'' +
+                ", paymentMode=" + paymentMode +
                 '}';
     }
+
 }

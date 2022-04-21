@@ -25,7 +25,7 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/addresses").permitAll()
                 .antMatchers(HttpMethod.POST,"/users").permitAll()
-                .antMatchers(HttpMethod.POST,"/orders").permitAll()
+                .antMatchers(HttpMethod.POST,"/orders/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api-docs").permitAll()
                 .antMatchers(HttpMethod.GET,"/swagger-ui/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()

@@ -28,7 +28,16 @@ public class OrderController {
     )
     public ResponseEntity create(@RequestBody CreateOrderRequest createOrderRequest) throws BookNotFoundException, BookOutOfStockException, OrderNotPlacedException {
         Order order = orderService.create(createOrderRequest);
-        return new ResponseEntity<>(new OrderResponse(order),HttpStatus.CREATED);
+        return new ResponseEntity<>(new OrderResponse(order), HttpStatus.CREATED);
     }
 
+    @PostMapping("/{orderId}/payment")
+    @Operation(summary = "Create order payment", description = "Creates payments for the order", tags = {"Order Service"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "201",
+            description = "Order payment created", content = {@Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResponseEntity.class))})}
+    )
+    public void payment(@PathVariable long orderId, @RequestBody PaymentDetails paymentDetails) throws OrderException {
+        orderService.makePayment(orderId, paymentDetails);
+    }
 }

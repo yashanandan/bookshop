@@ -47,11 +47,6 @@ class AddressServiceTest {
         assertThrows(ConstraintViolationException.class, ()-> addressService.create(createRequest, user));
     }
 
-    @Test
-    void shouldNotCreateAddressWhenUserIsNotValid() {
-        CreateAddressRequest createRequest = createAddress();
-        assertThrows(DataIntegrityViolationException.class, ()-> addressService.create(createRequest, null));
-    }
 
     private CreateAddressRequest invalidAddress() {
         return CreateAddressRequest.builder()

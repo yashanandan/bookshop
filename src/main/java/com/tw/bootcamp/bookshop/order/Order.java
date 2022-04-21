@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @Entity
 @Table(name = "orders")
 @EqualsAndHashCode
@@ -40,12 +41,22 @@ public class Order {
     @CreationTimestamp
     private Timestamp createdAt;
 
-    public Order(String recipientName, Book book, Address address, int quantity) {
+    @Column(name = "payment_mode")
+    @Enumerated(EnumType.STRING)
+    private PaymentMode paymentMode;
+
+    @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    public Order(String recipientName, Book book, Address address, int quantity, PaymentMode paymentMode) {
         this.recipientName = recipientName;
         this.book = book;
         this.address = address;
         this.quantity = quantity;
         this.amount = quantity * book.getPrice().getAmount();
+        this.paymentMode = paymentMode;
+        this.paymentStatus = PaymentStatus.PENDING;
     }
 
     public OrderResponse toResponse() {
@@ -57,8 +68,8 @@ public class Order {
                 .build();
     }
 
-    public static Order create(String recipientName, Book book, Address address, int quantity) {
-        return new Order(recipientName, book, address, quantity);
+    public static Order create(String recipientName, Book book, Address address, int quantity, PaymentMode paymentMode) {
+        return new Order(recipientName, book, address, quantity, paymentMode);
     }
 
 }
