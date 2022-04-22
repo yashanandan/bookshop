@@ -58,6 +58,7 @@ public class BookController {
     )
     List<BookResponse> upload(@RequestParam("file") MultipartFile file) throws BookCsvFileFormatException {
 
+        List<BookResponse> bookResponses = new ArrayList<>();
         if(file.isEmpty()) {
             throw new RuntimeException("Please attach a CSV file");
         } else {
@@ -79,13 +80,13 @@ public class BookController {
                 for(BookCsvModel book : books) {
                     addedBooks.add(bookService.saveBookFromCsv(book));
                 }
-                return addedBooks.stream()
+                bookResponses = addedBooks.stream()
                         .map(Book::toResponse)
                         .collect(toList());
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new BookCsvFileFormatException("Uploaded CSV is invalid");
             }
         }
-        return new ArrayList<>();
+        return bookResponses;
     }
 }
