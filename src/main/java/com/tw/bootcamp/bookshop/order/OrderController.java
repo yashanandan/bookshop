@@ -15,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 @RestController
 @RequestMapping("/orders")
 @CrossOrigin
@@ -79,5 +83,19 @@ public class OrderController {
       return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     return new ResponseEntity<>(HttpStatus.ACCEPTED);
+  }
+
+  @GetMapping
+  @Operation(summary = "List all ordered details", description = "List all ordered book details for last 72 hours", tags = {"Order Service"})
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "List all ordered book details",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = OrderResponse.class))})
+  })
+  public List<OrderResponse> list() {
+    List<Order> orders = orderService.fetchAll();
+    return orders.stream()
+            .map(Order::toResponse)
+            .collect(toList());
   }
 }

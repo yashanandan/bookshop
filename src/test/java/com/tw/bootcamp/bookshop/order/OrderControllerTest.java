@@ -10,6 +10,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -58,5 +61,10 @@ public class OrderControllerTest {
                 .andExpect(status().isAccepted());
     }
 
-
+    @Test
+    void shouldReturnOrderListWhenRequested() throws Exception {
+        List<Order> orders = new ArrayList<>();
+        Order order = new OrderTestBuilder().build();
+        orders.add(order);
+    }
 }

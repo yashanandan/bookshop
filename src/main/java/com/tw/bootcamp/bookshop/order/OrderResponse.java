@@ -20,6 +20,7 @@ public class OrderResponse {
     private int quantity;
     private Timestamp createdAt;
     private double amount;
+    private Long mobileNumber;
     private PaymentStatus paymentStatus;
     private PaymentMode paymentMode;
 
@@ -31,6 +32,7 @@ public class OrderResponse {
         this.quantity = order.getQuantity();
         this.createdAt = order.getCreatedAt();
         this.amount = order.getAmount();
+        this.mobileNumber = order.getMobileNumber();
         this.paymentStatus = order.getPaymentStatus();
         this.paymentMode = order.getPaymentMode();
     }

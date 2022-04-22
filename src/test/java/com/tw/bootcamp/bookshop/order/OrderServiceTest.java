@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -146,30 +149,45 @@ public class OrderServiceTest {
         paymentAlreadyDoneException.getMessage());
   }
 
-  @Test
-  @DisplayName("Should throw book out of stock exception when quantiy is more than requested")
-  void shouldThrowBookOutOfStockExeption() throws BookException {
+    @Test
+    @DisplayName("Should throw book out of stock exception when quantiy is more than requested")
+    void shouldThrowBookOutOfStockExeption() throws BookException {
 
-    CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequestWithQuantity(20);
-    double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
-    when(bookService.findById(1L)).thenReturn(getBook());
-    when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder().build());
+        CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequestWithQuantity(20);
+        double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
+        when(bookService.findById(1L)).thenReturn(getBook());
+        when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder().build());
 
-    assertThrows(BookOutOfStockException.class, () -> orderService.create(createOrderRequest));
-  }
+        assertThrows(BookOutOfStockException.class, () -> orderService.create(createOrderRequest));
+    }
 
-  @Test
-  @DisplayName("Should throw order not placed exception when the order id is null")
-  void shouldThrowOrderNotPlacedException() throws BookException, OrderException {
+    @Test
+    @DisplayName("Should throw order not placed exception when the order id is null")
+    void shouldThrowOrderNotPlacedException() throws BookException, OrderException {
 
-    CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
-    double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
-    when(bookService.findById(1L)).thenReturn(getBook());
-    when(addressService.create(createOrderRequest.getAddress(), null))
-        .thenReturn(new AddressTestBuilder().build());
-    when(orderRepository.save(any(Order.class)))
-        .thenReturn(new OrderTestBuilder(20l, null).build());
+        CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
+        double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
+        when(bookService.findById(1L)).thenReturn(getBook());
+        when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
+        when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder(20l, null).build());
 
-    assertThrows(OrderNotPlacedException.class, () -> orderService.create(createOrderRequest));
-  }
+        assertThrows(OrderNotPlacedException.class, () -> orderService.create(createOrderRequest));
+    }
+
+    @Test
+    void shouldBeEmptyWhenNoOrders() {
+        List<Order> orders = orderService.fetchAll();
+        assertEquals(0, orders.size());
+    }
+
+    @Test
+    void shouldFetchOneOrderWhenTotalOrderIsOne() throws BookNotFoundException {
+        Order order = new OrderTestBuilder().build();
+        List<Order> orderList = new ArrayList<Order>();
+        orderList.add(order);
+        when(orderRepository.findByCreatedAtBetween(any(Date.class), any(Date.class))).thenReturn(orderList);
+        List<Order> orders = orderService.fetchAll();
+        assertEquals(1, orders.size());
+        assertEquals(orders.get(0).getRecipientName(),order.getRecipientName());
+    }
 }

@@ -49,6 +49,7 @@ public class OrderTestBuilder {
                 .address(createAddress())
                 .quantity(quantity)
                 .recipientName("J Doe")
+                .mobileNumber(1234567890l)
                 .build();
     }
 

@@ -35,6 +35,9 @@ public class Order {
 
     private int quantity;
 
+    @Column(name = "mobile_number", columnDefinition = "NUMERIC")
+    private Long mobileNumber;
+
     @Column(columnDefinition = "NUMERIC")
     private double amount = 0.0;
 
@@ -50,7 +53,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    public Order(String recipientName, Book book, Address address, int quantity, PaymentMode paymentMode) {
+    public Order(String recipientName, Book book, Address address, int quantity, PaymentMode paymentMode, Long mobileNumber) {
         this.recipientName = recipientName;
         this.book = book;
         this.address = address;
@@ -58,6 +61,20 @@ public class Order {
         this.amount = quantity * book.getPrice().getAmount();
         this.paymentMode = paymentMode;
         this.paymentStatus = PaymentStatus.PENDING;
+        this.mobileNumber = mobileNumber;
+    }
+
+    public OrderResponse toResponse() {
+        return OrderResponse.builder()
+                .id(id)
+                .book(book)
+                .address(address)
+                .createdAt(createdAt)
+                .mobileNumber(mobileNumber)
+                .recipientName(recipientName)
+                .amount(amount)
+                .quantity(quantity)
+                .build();
     }
 
 }

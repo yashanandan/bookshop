@@ -10,6 +10,7 @@ import com.tw.bootcamp.bookshop.user.address.Address;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.sql.Date;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -44,7 +48,7 @@ public class OrderService {
             throw new BookOutOfStockException("Requested quantity is more than current stock");
         }
         Address newAddress = addressService.create(request.getAddress(), null);
-        Order newOrder = new Order(request.getRecipientName(), book, newAddress, request.getQuantity(), request.getPaymentMode());
+        Order newOrder = new Order(request.getRecipientName(), book, newAddress, request.getQuantity(), request.getPaymentMode(), request.getMobileNumber());
         newOrder = orderRepository.save(newOrder);
         if (newOrder.getId() == null) {
             throw new OrderNotPlacedException("Order was not saved");
@@ -73,6 +77,13 @@ public class OrderService {
         String errorMessage = jsonObject.get("details").toString();
         errorMessage = errorMessage.substring(2,errorMessage.length()-2);
         return errorMessage;
+    }
+    
+    public List<Order> fetchAll() {
+        Date endDate = new Date(System.currentTimeMillis());
+        Date startDate = new Date(DateUtils.addDays(endDate, -3).getTime());
+        List<Order> orders = orderRepository.findByCreatedAtBetween(startDate, endDate);
+        return orders;
     }
 
     private void validateOrderForPayment(long id) throws PaymentAlreadyDoneException, OrderNotFoundException {

@@ -23,4 +23,6 @@ public class CreateOrderRequest {
 
     private PaymentMode paymentMode;
 
+    private Long mobileNumber;
+
 }
