@@ -8,6 +8,8 @@ import com.tw.bootcamp.bookshop.order.payment.PaymentException;
 import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.Address;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -59,9 +61,18 @@ public class OrderService {
             restTemplate.postForObject("https://tw-mock-credit-service.herokuapp.com/payments", paymentDetails, ResponseEntity.class);
         } catch (RestClientException ex) {
             orderRepository.updatePaymentStatus(orderId, PaymentStatus.FAILED);
-            throw new PaymentException(ex.getMessage());
+            throw new PaymentException(getPaymentServiceErrorMessage(ex));
         }
         orderRepository.updatePaymentStatus(orderId, PaymentStatus.COMPLETE);
+    }
+
+    private String getPaymentServiceErrorMessage(RestClientException ex) {
+        JSONObject json = new JSONObject("{"+ ex.getMessage()+"}");
+        JSONArray jsonArray = new JSONArray(json.get("400").toString());
+        JSONObject jsonObject = new JSONObject(jsonArray.get(0).toString());
+        String errorMessage = jsonObject.get("details").toString();
+        errorMessage = errorMessage.substring(2,errorMessage.length()-2);
+        return errorMessage;
     }
 
     private void validateOrderForPayment(long id) throws PaymentAlreadyDoneException, OrderNotFoundException {

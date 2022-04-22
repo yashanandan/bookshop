@@ -103,11 +103,12 @@ public class OrderServiceTest {
   void throwsPaymentExceptionWhenPaymentIsUnsuccessful() throws Exception {
     long orderId = 1L;
     PaymentDetails paymentDetails = PaymentTestBuilder.createPaymentDetails();
+    String paymentErrorMessage = "400 : [{\"message\":\"Validation Failed\",\"details\":[\"The credit card number is not valid\"]}]";
 
     when(orderRepository.findById(any(Long.class)))
         .thenReturn(Optional.ofNullable(new OrderTestBuilder().build()));
     when(restTemplate.postForObject(any(String.class), any(Object.class), any()))
-        .thenThrow(new RestClientException("Card details are invalid"));
+        .thenThrow(new RestClientException(paymentErrorMessage));
     doNothing()
         .when(orderRepository)
         .updatePaymentStatus(any(Integer.class), any(PaymentStatus.class));
