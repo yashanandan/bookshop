@@ -22,9 +22,9 @@ public class OrderTestBuilder {
                 .quantity(1);
     }
 
-    public OrderTestBuilder(Long countAvailable) {
+    public OrderTestBuilder(Long countAvailable, Long id) {
         this.orderBuilder = Order.builder()
-                .id(1l)
+                .id(id)
                 .recipientName("J Doe")
                 .address(new AddressTestBuilder().build())
                 .book(new BookTestBuilder().withBookCountAvailable(countAvailable).build())
@@ -39,6 +39,15 @@ public class OrderTestBuilder {
                 .bookId(1l)
                 .address(createAddress())
                 .quantity(1)
+                .recipientName("J Doe")
+                .build();
+    }
+
+    public static CreateOrderRequest createOrderRequestWithQuantity(int quantity) {
+        return CreateOrderRequest.builder()
+                .bookId(1l)
+                .address(createAddress())
+                .quantity(quantity)
                 .recipientName("J Doe")
                 .build();
     }
@@ -59,6 +68,6 @@ public class OrderTestBuilder {
     }
 
     public OrderTestBuilder withBookCountAvailable(Long countAvailable) {
-        return new OrderTestBuilder(countAvailable);
+        return new OrderTestBuilder(countAvailable, 1l);
     }
 }

@@ -7,6 +7,7 @@ import com.tw.bootcamp.bookshop.order.payment.PaymentException;
 import com.tw.bootcamp.bookshop.order.payment.PaymentStatus;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
 import com.tw.bootcamp.bookshop.user.address.AddressTestBuilder;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -70,7 +71,7 @@ public class OrderServiceTest {
 
         when(bookService.findById(1L)).thenReturn(getBook());
         when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
-        when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder(expectedCountAvailableAsLong).build());
+        when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder(expectedCountAvailableAsLong, 1l).build());
         when(bookService.save(any())).thenReturn(new BookTestBuilder().withBookCountAvailable(expectedCountAvailableAsLong).build());
         Order order = orderService.create(createOrderRequest);
 
@@ -130,5 +131,30 @@ public class OrderServiceTest {
         PaymentAlreadyDoneException paymentAlreadyDoneException =
                 assertThrows(PaymentAlreadyDoneException.class, () -> orderService.makePayment(orderId, paymentDetails));
         assertEquals("Order is already paid",paymentAlreadyDoneException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw book out of stock exception when quantiy is more than requested")
+    void shouldThrowBookOutOfStockExeption() throws BookException {
+
+        CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequestWithQuantity(20);
+        double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
+        when(bookService.findById(1L)).thenReturn(getBook());
+        when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder().build());
+
+        assertThrows(BookOutOfStockException.class, () -> orderService.create(createOrderRequest));
+    }
+
+    @Test
+    @DisplayName("Should throw order not placed exception when the order id is null")
+    void shouldThrowOrderNotPlacedException() throws BookException, OrderException {
+
+        CreateOrderRequest createOrderRequest = OrderTestBuilder.createOrderRequest();
+        double totalAmount = (createOrderRequest.getQuantity() * getBook().getPrice().getAmount());
+        when(bookService.findById(1L)).thenReturn(getBook());
+        when(addressService.create(createOrderRequest.getAddress(), null)).thenReturn(new AddressTestBuilder().build());
+        when(orderRepository.save(any(Order.class))).thenReturn(new OrderTestBuilder(20l, null).build());
+
+        assertThrows(OrderNotPlacedException.class, () -> orderService.create(createOrderRequest));
     }
 }

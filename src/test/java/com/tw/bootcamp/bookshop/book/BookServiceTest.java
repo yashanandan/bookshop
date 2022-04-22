@@ -12,8 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -113,5 +112,10 @@ class BookServiceTest {
         // assert mocked book has count increased
         assertEquals(BookTestBuilder.getBookCsvModel().getBooksCount() * 2, bookToBeUploaded.getCountAvailable());
 
+    }
+
+    @Test
+    void shouldThrowExceptionIfBookNotFound() throws BookNotFoundException {
+        assertThrows(BookNotFoundException.class, () -> bookService.findById(1l));
     }
 }
