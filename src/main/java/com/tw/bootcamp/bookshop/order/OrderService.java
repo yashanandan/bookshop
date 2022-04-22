@@ -67,7 +67,7 @@ public class OrderService {
     private void validateOrderForPayment(long id) throws PaymentAlreadyDoneException, OrderNotFoundException {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order Not Found"));
         if (order.getPaymentStatus() == PaymentStatus.COMPLETE) {
-            throw new PaymentAlreadyDoneException("Order is already paid");
+            throw new PaymentAlreadyDoneException("Payment is not processed because order is already paid.");
         }
     }
 }
