@@ -74,6 +74,8 @@ public class Order {
                 .recipientName(recipientName)
                 .amount(amount)
                 .quantity(quantity)
+                .paymentStatus(paymentStatus)
+                .paymentMode(paymentMode)
                 .build();
     }
 
